@@ -40,6 +40,10 @@ jobs:
             *) echo "No password defined for this IDA SDK version" && exit 1 ;;
           esac
 
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '13.2'
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
