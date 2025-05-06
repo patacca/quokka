@@ -78,6 +78,10 @@ jobs:
           .\fetch_sdk.bat
 
       - name: Setup tmate session
+        env:
+          IDA_SDK_VERSION: idasdk${{ matrix.ida_sdk }}
+          IDA_SDK_PASSWORD: ${{ secrets[matrix.sdk_password] }}
+          CMAKE_BUILD_DIR: build${{ matrix.ida_sdk }}
         uses: mxschmitt/action-tmate@v3
 
       - name: Prepare build environment (Linux)
