@@ -12,12 +12,8 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        ida_sdk: [74]
+        ida_sdk: [82]
         include:
-          - os: ubuntu-latest
-            ext: so
-          - os: windows-latest
-            ext: dll
           - os: macos-latest
             ext: dylib
         exclude:
