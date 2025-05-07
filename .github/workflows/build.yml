@@ -11,15 +11,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest]
-        ida_sdk: [82]
+        os: [ubuntu-latest, windows-latest]
+        ida_sdk: [74, 77, 80, 81, 82, 83, 84, 90, 90sp1, 91]
         include:
-          - os: macos-latest
-            ext: dylib
-        exclude:
+          - os: ubuntu-latest
+            ext: so
+          - os: windows-latest
+            ext: dll
+          # - os: macos-latest
+          #   ext: dylib
+        # exclude:
           # We exclude these because ARM libraries were not available in 7.4 and the latest macos runner on GitHub are Mx machines
-          - os: macos-latest
-            ida_sdk: 74
+          # - os: macos-latest
+          #   ida_sdk: 74
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,10 +43,6 @@ jobs:
             91) echo "IDA_SDK_PASSWORD=${{ secrets.IDA_SDK91_PASSWORD }}" >> "$GITHUB_ENV" ;;
             *) echo "No password defined for this IDA SDK version" && exit 1 ;;
           esac
-
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '16.2'
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -113,8 +113,7 @@ jobs:
           7z.exe x -p"${env:IDA_SDK_PASSWORD}" -y -o"third_party" "third_party\${env:IDA_SDK_VERSION}.zip"
           rm "third_party\${env:IDA_SDK_VERSION}\include\regex.h"
           cmake -B "${env:CMAKE_BUILD_DIR}" -S "${env:GITHUB_WORKSPACE}" -DIdaSdk_ROOT_DIR="${env:GITHUB_WORKSPACE}/third_party/${env:IDA_SDK_VERSION}"
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+
       - name: Build
         env:
           CMAKE_BUILD_DIR: build${{ matrix.ida_sdk }}
